@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    container_name: ${DB_HOST}
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - library-net
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+        - "${ADMINER_PORT}:8080"
+    depends_on:
+      - db
+    networks:
+      - library-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java-app
+    depends_on:  # Ensure the database is ready before starting the app
+      - db
+    stdin_open: true # Keep STDIN open even if not attached
+    tty: true # Keep the container running
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - library-net
+
+volumes:
+  db-data:
+
+networks:
+  library-net:
