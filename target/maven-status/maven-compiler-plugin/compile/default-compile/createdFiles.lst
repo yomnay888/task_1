@@ -1,0 +1,8 @@
+org\example\Main.class
+org\example\HibernateUtil.class
+org\example\User.class
+org\example\Borrowable.class
+org\example\BorrowedBook.class
+org\example\Book.class
+org\example\Admin.class
+org\example\RegularUser.class
